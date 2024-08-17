@@ -46,9 +46,12 @@
 
             document.addEventListener('DOMContentLoaded', () => {
                 spotlight.init({
-                    "url": "https://your-api-url.com",  // URL to fetch search data (required)
+                    "url": "https://your-api-url.com",
 
-                    // Fake data response
+                    onItemClick: (sectionData, itemData) => {
+                        alert(`You clicked on ${sectionData.name} : ${itemData.name} !`);
+                    },
+
                     onFetch: function(url, options) {
                         return {
                             ok: true,
@@ -112,7 +115,6 @@
                         }
                     },
 
-                    // Fake data filter
                     onDataResponse: (query, data) => data.map(section => {
                             const { type, name, items = [] } = section;
                             const filteredItems = items.filter(item => item.name.toLowerCase().includes(query.toLowerCase()));

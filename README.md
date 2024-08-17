@@ -109,10 +109,14 @@ The module expects the query response from the server to be in the following JSO
 
 ### Response Fields
 
+The required parameters of the response are:
+
 - **type**: A string representing the category type (e.g., "books", "movies"). This should match the keys in the `icons` option to apply the correct icon and color.
 - **name**: A string representing the name of the category. This is displayed as the section title in the search results.
 - **items**: An array of objects where each object represents an item in the category.
   - **name**: A string representing the name of the item. This is displayed as an individual result in the search results.
+
+If you add any other parameters for the section or the items, they will be provided when calling the `onItemClick` callback.
 
 ### Example Response
 
@@ -121,17 +125,21 @@ The module expects the query response from the server to be in the following JSO
     {
         "type": "books",
         "name": "Books",
+        "param1": "arg1",
+        "param2": "arg2",
         "items": [
-            { "name": "JavaScript: The Good Parts" },
-            { "name": "Eloquent JavaScript" }
+            { "name": "JavaScript: The Good Parts", "paramA": "argA", "paramB": "argB" },
+            { "name": "Eloquent JavaScript", "paramA": "argC", "paramB": "argD" }
         ]
     },
     {
         "type": "movies",
         "name": "Movies",
+        "param1": "arg3",
+        "param2": "arg4",
         "items": [
-            { "name": "Inception" },
-            { "name": "The Matrix" }
+            { "name": "Inception", "paramA": "argE", "paramB": "argF" },
+            { "name": "The Matrix", "paramA": "argG", "paramB": "argH" }
         ]
     }
 ]

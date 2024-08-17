@@ -80,16 +80,20 @@ const spotlight = (() => {
         // Called when data is received and processed
         onDataResponse: (query, data) => data,
         // Called to determine how each item should be displayed
-        onItemAdd: (itemData) => itemData.name
+        onItemAdd: (itemData) => itemData.name,
+        // Callback function when an item is clicked
+        onItemClick: (sectionData, itemData) => {},
     };
 
     // Private variables
     let options = {};
     let currentDebounceTimeout;
     let currentRequestController;
+    const itemIdMap = new Map();
+    const sectionIdMap = new Map();
 
     /**
-     * Creates a FontAwesome icon element with custom colors.
+     * Creates an icon element with custom colors.
      * @param {string} iconClass - The FontAwesome icon class.
      * @param {string} backgroundColor - The background color for the icon.
      * @param {string} foregroundColor - The foreground color for the icon.
@@ -216,41 +220,115 @@ const spotlight = (() => {
         let hasResults = false;
         let resultsHTML = '';
 
-        data.forEach(section => {
-            const { type, name, items = [] } = section;
+        clearMaps();
 
+        data.forEach(section => {
+            let { type, name, items = [] } = section;
             if (items.length === 0) return;
+
+            items = generateMaps(section, items);
 
             hasResults = true;
             const sectionIcon = options.icons[type] || options.fallbackIcon;
-            resultsHTML += createSectionHTML(name, sectionIcon.class, sectionIcon.backgroundColor, sectionIcon.foregroundColor, items);
+            resultsHTML += createSectionHTML(section, sectionIcon.class, sectionIcon.backgroundColor, sectionIcon.foregroundColor, items);
         });
 
         return { hasResults, resultsHTML };
     };
 
     /**
-     * Creates the HTML structure for a search results section.
-     * @param {string} sectionName - The name of the section.
-     * @param {string} iconClass - The icon class for the section.
-     * @param {string} iconBackgroundColor - The background color for the section icon.
-     * @param {string} iconForegroundColor - The foreground color for the section icon.
-     * @param {Array} items - The items to display in the section.
-     * @returns {string} - The generated HTML for the section.
+     * Generates a unique identifier (UUID) in the format xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx.
+     * The UUID is used to uniquely identify items in the application.
+     *
+     * @returns {string} A UUID string.
      */
-    const createSectionHTML = (sectionName, iconClass, iconBackgroundColor, iconForegroundColor, items) => `
-        <div class="spotlight-section ${options.sectionClass}">
-            <div class="spotlight-section-header">
-                <div class="icon-container" style="background-color: ${iconBackgroundColor}; color: ${iconForegroundColor};">
-                    ${createIconElement(iconClass).outerHTML}
+    const generateUniqueId = () => {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+            const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    };
+
+    /**
+     * Generates unique IDs for each section and item and stores them in a map for easy access.
+     *
+     * @param {Object} section - Object representing an item section.
+     * @param {Array<Object>} items - An array of item objects to be assigned unique IDs.
+     * @returns {Array<Object>} A new array of items with each item having a unique __uuid property.
+     */
+    const generateMaps = (section, items) => {
+        const { ["items"]: _, ...sectionParams } = section;
+        sectionIdMap.set(section.type, sectionParams);
+
+        return items.map(item => {
+            const itemId = generateUniqueId();
+            itemIdMap.set(itemId, item);
+            return { ...item, __uuid: itemId };
+        });
+    };
+
+    /**
+     * Clear the saved maps.
+     *
+     */
+    const clearMaps = () => {
+        sectionIdMap.clear();
+        itemIdMap.clear();
+    };
+
+    /**
+     * Retrieves item data from the map using the item's unique ID.
+     *
+     * @param {string} itemId - The unique ID of the item.
+     * @returns {Object|undefined} The item data associated with the given ID, or undefined if not found.
+     */
+    const findItemData = (itemId) => {
+        return itemIdMap.get(itemId);
+    };
+
+    /**
+     * Retrieves metadata for a section based on its type.
+     *
+     * @param {string} sectionType - The type of the section to retrieve metadata for.
+     * @returns {Object|null} - The section metadata, or null if not found.
+     */
+    const findSectionData = (sectionType) => {
+        return sectionIdMap.get(sectionType) || null;
+    };
+
+    /**
+     * Creates HTML for a section, including items with unique IDs.
+     * The items are assigned unique IDs using the __uuid field.
+     *
+     * @param {Object} section - The section object.
+     * @param {string} iconClass - The FontAwesome class for the section icon.
+     * @param {string} iconBackgroundColor - The background color for the section icon.
+     * @param {string} iconForegroundColor - The text color for the section icon.
+     * @param {Array<Object>} itemsWithIds - An array of items with unique __uuid fields.
+     * @returns {string} The generated HTML string for the section.
+     */
+    const createSectionHTML = (section, iconClass, iconBackgroundColor, iconForegroundColor, itemsWithIds) => {
+        return `
+            <div class="spotlight-section ${options.sectionClass}">
+                <div class="spotlight-section-header">
+                    <div class="icon-container" style="background-color: ${iconBackgroundColor}; color: ${iconForegroundColor};">
+                        ${createIconElement(iconClass).outerHTML}
+                    </div>
+                    <span class="spotlight-section-title ${options.sectionTitleClass}">${section.name}</span>
                 </div>
-                <span class="spotlight-section-title ${options.sectionTitleClass}">${sectionName}</span>
+                <div class="spotlight-section-content">
+                    ${itemsWithIds.map(item => `
+                        <div class="spotlight-section-item ${options.sectionItemClass}"
+                            data-section-type="${section.type}"
+                            data-item-id="${item.__uuid}">
+                            ${options.onItemAdd(item)}
+                        </div>
+                    `).join('')}
+                </div>
             </div>
-            <div class="spotlight-section-content">
-                ${items.map(item => `<div class="spotlight-section-item ${options.sectionItemClass}">${options.onItemAdd(item)}</div>`).join('')}
-            </div>
-        </div>
-    `;
+        `;
+    };
+
 
     /**
      * Updates the search results based on the user's query after a debounce period.
@@ -327,6 +405,7 @@ const spotlight = (() => {
         spotlightClear.addEventListener('click', () => clearInput(spotlightInput, spotlightResults, spotlightClear));
         spotlightInput.addEventListener('input', () => updateResults(spotlightInput.value.trim().toLowerCase(), spotlightResults, spotlightClear));
         document.addEventListener('keydown', event => handleKeydown(event, spotlightModal, spotlightInput));
+        document.addEventListener('click', handleItemClick);
     };
 
     /**
@@ -352,6 +431,31 @@ const spotlight = (() => {
             event.preventDefault();
             toggleModal(spotlightModal, spotlightInput);
         }
+    };
+
+    /**
+     * Handles clicks on items within the spotlight section.
+     * Retrieves item data based on the item's unique ID and triggers the onItemClick callback.
+     *
+     * @param {Event} event - The click event.
+     */
+    const handleItemClick = (event) => {
+        const itemElement = event.target.closest('.spotlight-section-item');
+        if (!itemElement) return;
+
+        const itemId = itemElement.getAttribute('data-item-id');
+        if (!itemId) return;
+
+        const itemData = findItemData(itemId);
+        if (!itemData) return;
+
+        const sectionType = itemElement.getAttribute('data-section-type');
+        if (!sectionType) return;
+
+        const sectionData = findSectionData(sectionType);
+        if (!sectionData) return;
+
+        options.onItemClick(sectionData, itemData);
     };
 
     /**
