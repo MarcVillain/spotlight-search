@@ -1,0 +1,140 @@
+.spotlight-icon {
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.spotlight-icon:hover {
+    color: #0056b3;
+}
+
+.spotlight-modal {
+    position: fixed;
+    top: 15vh;
+    left: 50%;
+    transform: translate(-50%, 0) scale(0.8);
+    width: 90%;
+    max-width: 800px;
+    max-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s, visibility 0.15s, transform 0.15s;
+    z-index: 1050;
+}
+
+.spotlight-modal.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0) scale(1);
+}
+
+.spotlight-modal-content {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.spotlight-container {
+    display: flex;
+    align-items: center;
+    background: #f9f9f9;
+    border-radius: 8px;
+    position: relative;
+    width: 100%;
+}
+
+.spotlight-input {
+    border: none;
+    font-size: 16px;
+    background: transparent;
+    padding: 26px 48px 26px 26px;
+    height: 40px;
+    box-sizing: border-box;
+    width: 100%;
+    outline: 0;
+}
+
+.spotlight-clear-btn {
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    color: #ccc;
+    cursor: pointer;
+    display: none;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.spotlight-clear-btn.show {
+    display: block;
+}
+
+.spotlight-clear-btn:hover {
+    color: #999;
+}
+
+.spotlight-results-container {
+    padding: 15px;
+    overflow-y: auto;
+    max-height: calc(70vh - 60px);
+    display: none;
+}
+
+.spotlight-section {
+    margin-bottom: 20px;
+}
+
+.spotlight-section:last-child {
+    margin-bottom: 0;
+}
+
+.spotlight-section-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+.spotlight-section-header .icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px; /* Rounded corners for the square */
+    background-color: var(--icon-background-color, #007bff);
+    color: var(--icon-foreground-color, #fff);
+    font-size: 18px;
+}
+
+.spotlight-section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.spotlight-section-item {
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background: #f0f0f5;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.spotlight-section-item:last-child {
+    margin-bottom: 0;
+}
+
+.spotlight-section-item:hover {
+    background-color: #e0e0e5;
+}
+
