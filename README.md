@@ -7,13 +7,12 @@ The Spotlight Search is a customizable JavaScript module that provides a quick s
 
 ## 🚀 Features
 
-- Pure JavaScript and CSS with no dependencies on external libraries or frameworks
-- Customizable icons and colors for different categories
-- AJAX-based search with debounce for optimized performance
-- Keyboard shortcuts to toggle the search modal
-- Supports custom callbacks for various stages of the search process
-- Gracefully handles errors and provides feedback to the user
-- Easily integratable into any web project
+- **Native**: Implemented entirely with vanilla JavaScript and CSS for high performance and simplicity.
+- **Customizable**: Easily customize icons, colors, styles and behaviors to fit your design needs.
+- **Debounced Input**: Minimizes unnecessary requests with built-in debounce functionality.
+- **Dynamic Results**: Automatically updates search results with asynchronous data fetching.
+- **Keyboard Shortcuts**: Quick access to the spotlight search with customizable keyboard shortcuts.
+- **Dark Mode Support**: Includes options for dark mode to enhance usability in low-light environments.
 
 ## 📦 Installation
 
@@ -69,7 +68,7 @@ You can find all the available options and their default value at the top of the
 
 ### CSS
 
-Ensure that the necessary CSS styles are included in spotlight.css or your custom stylesheet to style the modal, input, buttons, and results container.
+Ensure that the necessary CSS styles are included in spotlight.css to style the modal, input, buttons, and results container.
 
 ## 📊 Query Format
 
@@ -81,7 +80,7 @@ When a search is performed, the Spotlight Search sends an HTTP GET request to th
 - **Query Parameter**: `query`
 - **Description**: The search input string entered by the user.
 
-#### Example
+#### Example Request
 
 If the user searches for "JavaScript":
 
@@ -107,7 +106,7 @@ The module expects the query response from the server to be in the following JSO
 ]
 ```
 
-### Response Fields
+#### Response Fields
 
 The required parameters of the response are:
 
@@ -118,7 +117,7 @@ The required parameters of the response are:
 
 If you add any other parameters for the section or the items, they will be provided when calling the `onItemClick` callback.
 
-### Example Response
+#### Example Response
 
 ```json
 [
