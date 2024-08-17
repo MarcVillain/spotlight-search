@@ -8,23 +8,37 @@
 const spotlight = (() => {
     // Default options for the spotlight module
     const defaultOptions = {
-        searchIcon: 'fas fa-search', // Default search icon (FontAwesome class)
-        icons: { // Icon classes and colors for different search categories
+        /*
+         * General
+         */
+
+        // URL for AJAX requests (required)
+        url: '',
+        // Options for AJAX requests
+        ajaxOptions: {},
+
+        /*
+         * UI
+         */
+
+        // Default search icon (FontAwesome class)
+        searchIcon: 'fas fa-search',
+        // Icon classes and colors for different search categories
+        icons: {
             "books": { class: 'fas fa-book', backgroundColor: '#007bff', foregroundColor: '#fff' },
             "movies": { class: 'fas fa-film', backgroundColor: '#28a745', foregroundColor: '#fff' },
             "music": { class: 'fas fa-music', backgroundColor: '#dc3545', foregroundColor: '#fff' },
             "tv-shows": { class: 'fas fa-tv', backgroundColor: '#ffc107', foregroundColor: '#000' },
             "tech": { class: 'fas fa-laptop-code', backgroundColor: '#17a2b8', foregroundColor: '#fff' }
         },
-        placeholderText: 'Search... (Ctrl + K)', // Placeholder text for the input field
-        clearButtonIcon: 'fas fa-times', // Icon class for the clear button
-        focusTimeout: 40, // Delay in milliseconds before focusing the input field when the modal is shown
-        debounceTimeout: 300, // Delay in milliseconds to wait before triggering the search request
-        disableClearButton: false, // Flag to disable the clear button
-        fallbackIcon: { class: 'fas fa-question', backgroundColor: '#6c757d', foregroundColor: '#fff' }, // Fallback icon if a type is not defined
-        ajaxOptions: {}, // Options for AJAX requests
-        keyboardShortcut: { ctrlKey: true, key: 'k' }, // Keyboard shortcut for opening the spotlight
-        url: '', // URL for AJAX requests
+        // Fallback icon if a type is not defined
+        fallbackIcon: { class: 'fas fa-question', backgroundColor: '#6c757d', foregroundColor: '#fff' },
+        // Placeholder text for the input field
+        placeholderText: 'Search... (Ctrl + K)',
+        // Icon class for the clear button
+        clearButtonIcon: 'fas fa-times',
+        // Flag to disable the clear button
+        disableClearButton: false,
         // Custom classes for different UI elements
         modalClass: '',
         inputClass: '',
@@ -33,15 +47,38 @@ const spotlight = (() => {
         sectionClass: '',
         sectionTitleClass: '',
         sectionItemClass: '',
-        // Callback functions
-        onFetchStart: () => {}, // Called when a fetch request starts
-        onFetchSuccess: () => {}, // Called when a fetch request is successful
-        onFetchError: (error) => {}, // Called when a fetch request fails
-        onResultsUpdate: (hasResults) => {}, // Called when search results are updated
-        onModalToggle: (modal) => {}, // Called when the modal visibility is toggled
-        onInputFocus: (input) => {}, // Called when the input field is focused
-        onDataResponse: (data) => data, // Called when data is received and processed
-        onItemAdd: (itemData) => itemData.name // Called to determine how each item should be displayed
+
+        /*
+         * UX
+         */
+
+        // Delay in milliseconds before focusing the input field when the modal is shown
+        focusTimeout: 40,
+        // Delay in milliseconds to wait before triggering the search request
+        debounceTimeout: 300,
+        // Keyboard shortcut for opening the spotlight
+        keyboardShortcut: { ctrlKey: true, key: 'k' },
+
+        /*
+         * Callbacks
+         */
+
+        // Called when a fetch request starts
+        onFetchStart: () => {},
+        // Called when a fetch request is successful
+        onFetchSuccess: () => {},
+        // Called when a fetch request fails
+        onFetchError: (error) => {},
+        // Called when search results are updated
+        onResultsUpdate: (hasResults) => {},
+        // Called when the modal visibility is toggled
+        onModalToggle: (modal) => {},
+        // Called when the input field is focused
+        onInputFocus: (input) => {},
+        // Called when data is received and processed
+        onDataResponse: (data) => data,
+        // Called to determine how each item should be displayed
+        onItemAdd: (itemData) => itemData.name
     };
 
     // Private variables
