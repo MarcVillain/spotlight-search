@@ -1,6 +1,4 @@
-# Spotlight Search 🔍
-
-## 📝 Overview
+# 🔍 Spotlight Search
 
 The Spotlight Search is a customizable JavaScript module that provides a quick search functionality with a spotlight-style modal. It supports categories with custom icons and colors, integrates with a data source via AJAX, and allows customization through options and callbacks. The module is built with a focus on flexibility and ease of integration.
 
