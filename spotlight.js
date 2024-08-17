@@ -216,12 +216,11 @@ const spotlight = (() => {
 
         data.forEach(section => {
             const { type, name, items = [] } = section;
-            const filteredItems = items.filter(item => item.name.toLowerCase().includes(query));
 
-            if (filteredItems.length === 0) return;
+            if (items.length === 0) return;
 
             hasResults = true;
-            const sectionIcon = options.icons[type] || options.fallbackIcon; // Fallback icon if type is not in map
+            const sectionIcon = options.icons[type] || options.fallbackIcon;
             resultsHTML += createSectionHTML(name, sectionIcon.class, sectionIcon.backgroundColor, sectionIcon.foregroundColor, filteredItems);
         });
 
