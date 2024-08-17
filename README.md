@@ -2,7 +2,8 @@
 
 The Spotlight Search is a customizable JavaScript module that provides a quick search functionality with a spotlight-style modal. It supports categories with custom icons and colors, integrates with a data source via AJAX, and allows customization through options and callbacks. The module is built with a focus on flexibility and ease of integration.
 
-![Spotlight Search](./screenshot.png)
+![Spotlight Search (light)](./screenshot-light.png)
+![Spotlight Search (dark)](./screenshot-dark.png)
 
 ## 🚀 Features
 
@@ -47,6 +48,11 @@ import spotlight from './spotlight.js';
 
 spotlight.init({
     url: '/search', // URL to fetch search data (required)
+    ajaxOptions: {
+        headers: {
+            'Authorization': 'Bearer YOUR_ACCESS_TOKEN'
+        }
+    },
     placeholderText: 'Search here...',
     icons: {
         "books": { class: 'fas fa-book', backgroundColor: '#4CAF50', foregroundColor: '#fff' },
@@ -65,7 +71,25 @@ You can find all the available options and their default value at the top of the
 
 Ensure that the necessary CSS styles are included in spotlight.css or your custom stylesheet to style the modal, input, buttons, and results container.
 
-## 📊 Query Response Format
+## 📊 Query Format
+
+### Request
+
+When a search is performed, the Spotlight Search sends an HTTP GET request to the specified `url` with the following format:
+
+- **Method**: `GET`
+- **Query Parameter**: `query`
+- **Description**: The search input string entered by the user.
+
+#### Example
+
+If the user searches for "JavaScript":
+
+```plaintext
+GET https://your-api-url.com/search?query=JavaScript
+```
+
+### Response
 
 The module expects the query response from the server to be in the following JSON format:
 

@@ -1,10 +1,42 @@
+:root {
+    --spotlight-icon-hover-fg: #0056b3;
+    --spotlight-modal-bg: #fff;
+    --spotlight-modal-shadow: rgba(0, 0, 0, 0.3);
+    --spotlight-container-bg: #f9f9f9;
+    --spotlight-clear-btn-fg: #ccc;
+    --spotlight-clear-btn-hover-fg: #999;
+    --spotlight-icon-bg: #007bff;
+    --spotlight-icon-fg: #fff;
+    --spotlight-title-fg: #333;
+    --spotlight-item-bg: #f0f0f5;
+    --spotlight-item-hover-bg: #e0e0e5;
+    --spotlight-input-fg: #444;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --spotlight-icon-hover-fg: #6699ff;
+        --spotlight-modal-bg: #1e1e1e;
+        --spotlight-modal-shadow: rgba(0, 0, 0, 0.7);
+        --spotlight-container-bg: #2b2b2b;
+        --spotlight-clear-btn-fg: #777;
+        --spotlight-clear-btn-hover-fg: #aaa;
+        --spotlight-icon-bg: #0056b3;
+        --spotlight-icon-fg: #fff;
+        --spotlight-title-fg: #e0e0e0;
+        --spotlight-item-bg: #3a3a3a;
+        --spotlight-item-hover-bg: #4a4a4a;
+        --spotlight-input-fg: #ddd;
+    }
+}
+
 .spotlight-icon {
     cursor: pointer;
     transition: color 0.3s;
 }
 
 .spotlight-icon:hover {
-    color: #0056b3;
+    color: var(--spotlight-icon-hover-fg);
 }
 
 .spotlight-modal {
@@ -30,9 +62,9 @@
 }
 
 .spotlight-modal-content {
-    background: #fff;
+    background: var(--spotlight-modal-bg);
     border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 20px var(--spotlight-modal-shadow);
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -42,7 +74,7 @@
 .spotlight-container {
     display: flex;
     align-items: center;
-    background: #f9f9f9;
+    background: var(--spotlight-container-bg);
     border-radius: 8px;
     position: relative;
     width: 100%;
@@ -57,13 +89,14 @@
     box-sizing: border-box;
     width: 100%;
     outline: 0;
+    color: var(--spotlight-input-fg); /* Input text color */
 }
 
 .spotlight-clear-btn {
     border: none;
     background: transparent;
     font-size: 20px;
-    color: #ccc;
+    color: var(--spotlight-clear-btn-fg);
     cursor: pointer;
     display: none;
     position: absolute;
@@ -77,7 +110,7 @@
 }
 
 .spotlight-clear-btn:hover {
-    color: #999;
+    color: var(--spotlight-clear-btn-hover-fg);
 }
 
 .spotlight-results-container {
@@ -108,24 +141,24 @@
     justify-content: center;
     width: 36px;
     height: 36px;
-    border-radius: 8px; /* Rounded corners for the square */
-    background-color: var(--icon-background-color, #007bff);
-    color: var(--icon-foreground-color, #fff);
+    border-radius: 8px;
+    background-color: var(--spotlight-icon-bg);
+    color: var(--spotlight-icon-fg);
     font-size: 18px;
 }
 
 .spotlight-section-title {
     font-size: 18px;
     font-weight: 600;
-    color: #333;
+    color: var(--spotlight-title-fg);
 }
 
 .spotlight-section-item {
     padding: 12px;
     border-radius: 8px;
     margin-bottom: 10px;
-    background: #f0f0f5;
-    color: #333;
+    background: var(--spotlight-item-bg);
+    color: var(--spotlight-title-fg);
     cursor: pointer;
     transition: background-color 0.2s;
 }
@@ -135,6 +168,5 @@
 }
 
 .spotlight-section-item:hover {
-    background-color: #e0e0e5;
+    background-color: var(--spotlight-item-hover-bg);
 }
-

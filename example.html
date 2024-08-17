@@ -14,26 +14,110 @@
                 background: #f0f0f5;
                 height: 200vh;
             }
+
+            h2 {
+                display: inline-block;
+            }
+
+            body > div {
+                display: inline-block;
+                margin-left: 10px;
+            }
+
+            @media (prefers-color-scheme: dark) {
+                body {
+                    background: #121212;
+                    color: #fffffe
+                }
+            }
         </style>
     </head>
     <body>
+        <h2>Welcome to the Website</h2>
         <div data-spotlight="true"></div>
-
-        <div class="content-section">
-            <h2>Welcome to the Website</h2>
-            <p>This is some sample content to help you visualize the search functionality on top of an existing page.</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus imperdiet, nulla et dictum interdum, nisi lorem egestas odio, vitae scelerisque enim ligula venenatis dolor.</p>
-            <p>Maecenas nisl est, ultrices nec congue eget, auctor vitae massa. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ut sapien non nisi sodales feugiat. Curabitur lacinia tristique dolor, vitae maximus est vehicula in. Proin a erat vel dolor malesuada euismod.</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        </div>
+        <p>This is some sample content to help you visualize the search functionality on top of an existing page.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus imperdiet, nulla et dictum interdum, nisi lorem egestas odio, vitae scelerisque enim ligula venenatis dolor.</p>
+        <p>Maecenas nisl est, ultrices nec congue eget, auctor vitae massa. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ut sapien non nisi sodales feugiat. Curabitur lacinia tristique dolor, vitae maximus est vehicula in. Proin a erat vel dolor malesuada euismod.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 
         <script type="module">
             import spotlight from './spotlight.js';
 
             document.addEventListener('DOMContentLoaded', () => {
                 spotlight.init({
-                    "url": "/search"  // URL to fetch search data (required)
+                    "url": "https://your-api-url.com",  // URL to fetch search data (required)
+
+                    // Fake data response
+                    onFetch: function(url, options) {
+                        return {
+                            ok: true,
+                            json: () => [
+                                {
+                                    type: "books",
+                                    name: "Books",
+                                    items: [
+                                        { name: "JavaScript: The Good Parts" },
+                                        { name: "Eloquent JavaScript" },
+                                        { name: "You Don't Know JS" },
+                                        { name: "Clean Code" },
+                                        { name: "The Pragmatic Programmer" }
+                                    ]
+                                },
+                                {
+                                    type: "movies",
+                                    name: "Movies",
+                                    items: [
+                                        { name: "Inception" },
+                                        { name: "Interstellar" },
+                                        { name: "The Matrix" },
+                                        { name: "The Dark Knight" },
+                                        { name: "Pulp Fiction" }
+                                    ]
+                                },
+                                {
+                                    type: "music",
+                                    name: "Music",
+                                    items: [
+                                        { name: "Bohemian Rhapsody" },
+                                        { name: "Imagine" },
+                                        { name: "Smells Like Teen Spirit" },
+                                        { name: "Hotel California" },
+                                        { name: "Hey Jude" }
+                                    ]
+                                },
+                                {
+                                    type: "tv-shows",
+                                    name: "TV Shows",
+                                    items: [
+                                        { name: "Breaking Bad" },
+                                        { name: "Stranger Things" },
+                                        { name: "Game of Thrones" },
+                                        { name: "The Office" },
+                                        { name: "Friends" }
+                                    ]
+                                },
+                                {
+                                    type: "tech",
+                                    name: "Tech",
+                                    items: [
+                                        { name: "React" },
+                                        { name: "Vue.js" },
+                                        { name: "Angular" },
+                                        { name: "Node.js" },
+                                        { name: "Python" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+
+                    // Fake data filter
+                    onDataResponse: (query, data) => data.map(section => {
+                            const { type, name, items = [] } = section;
+                            const filteredItems = items.filter(item => item.name.toLowerCase().includes(query.toLowerCase()));
+                            return { type, name, items: filteredItems };
+                        }).filter(section => section.items.length > 0),
                 });
             });
         </script>

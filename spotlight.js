@@ -65,6 +65,8 @@ const spotlight = (() => {
 
         // Called when a fetch request starts
         onFetchStart: () => {},
+        // Called for the fetch request
+        onFetch: (url, ajaxOptions) => fetch(url, ajaxOptions),
         // Called when a fetch request is successful
         onFetchSuccess: () => {},
         // Called when a fetch request fails
@@ -76,7 +78,7 @@ const spotlight = (() => {
         // Called when the input field is focused
         onInputFocus: (input) => {},
         // Called when data is received and processed
-        onDataResponse: (data) => data,
+        onDataResponse: (query, data) => data,
         // Called to determine how each item should be displayed
         onItemAdd: (itemData) => itemData.name
     };
@@ -210,7 +212,7 @@ const spotlight = (() => {
      * @param {string} query - The search query entered by the user.
      * @returns {Object} - An object containing a boolean `hasResults` and the generated `resultsHTML`.
      */
-    const handleSearchResults = (data, query) => {
+    const handleSearchResults = (data) => {
         let hasResults = false;
         let resultsHTML = '';
 
@@ -221,7 +223,7 @@ const spotlight = (() => {
 
             hasResults = true;
             const sectionIcon = options.icons[type] || options.fallbackIcon;
-            resultsHTML += createSectionHTML(name, sectionIcon.class, sectionIcon.backgroundColor, sectionIcon.foregroundColor, filteredItems);
+            resultsHTML += createSectionHTML(name, sectionIcon.class, sectionIcon.backgroundColor, sectionIcon.foregroundColor, items);
         });
 
         return { hasResults, resultsHTML };
@@ -233,10 +235,10 @@ const spotlight = (() => {
      * @param {string} iconClass - The icon class for the section.
      * @param {string} iconBackgroundColor - The background color for the section icon.
      * @param {string} iconForegroundColor - The foreground color for the section icon.
-     * @param {Array} filteredItems - The filtered items to display in the section.
+     * @param {Array} items - The items to display in the section.
      * @returns {string} - The generated HTML for the section.
      */
-    const createSectionHTML = (sectionName, iconClass, iconBackgroundColor, iconForegroundColor, filteredItems) => `
+    const createSectionHTML = (sectionName, iconClass, iconBackgroundColor, iconForegroundColor, items) => `
         <div class="spotlight-section ${options.sectionClass}">
             <div class="spotlight-section-header">
                 <div class="icon-container" style="background-color: ${iconBackgroundColor}; color: ${iconForegroundColor};">
@@ -245,7 +247,7 @@ const spotlight = (() => {
                 <span class="spotlight-section-title ${options.sectionTitleClass}">${sectionName}</span>
             </div>
             <div class="spotlight-section-content">
-                ${filteredItems.map(item => `<div class="spotlight-section-item ${options.sectionItemClass}">${options.onItemAdd(item)}</div>`).join('')}
+                ${items.map(item => `<div class="spotlight-section-item ${options.sectionItemClass}">${options.onItemAdd(item)}</div>`).join('')}
             </div>
         </div>
     `;
@@ -283,12 +285,14 @@ const spotlight = (() => {
             try {
                 options.onFetchStart();
 
-                const response = await fetch(options.url, { ...options.ajaxOptions, signal });
+                const url = new URL(options.url);
+                url.search = new URLSearchParams({ query: query });
+                const response = await options.onFetch(url, { ...options.ajaxOptions, signal });
                 if (!response.ok) throw new Error('Network response was not ok');
 
                 const data = await response.json();
-                const processedData = options.onDataResponse(data);
-                const { hasResults, resultsHTML } = handleSearchResults(processedData, query);
+                const processedData = options.onDataResponse(query, data);
+                const { hasResults, resultsHTML } = handleSearchResults(processedData);
 
                 spotlightResults.innerHTML = resultsHTML;
                 spotlightResults.style.display = hasResults ? 'block' : 'none';
